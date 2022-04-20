@@ -8,12 +8,14 @@ import java.util.List;
 import com.bank.exception.BalanceInsufficientException;
 import com.bank.utilities.DateFormat;
 
+
+
 public class Account {
 	private String rib;
 	private BigDecimal balance;
 	private DateFormat dateformat;
 
-	private List<Transaction> transactions = new ArrayList<Transaction>();
+	private List<Transaction> transactions = new ArrayList<>();
 	private Printer printer;
 
 	public Account(String rib, BigDecimal balance, DateFormat dateformat, Printer printer) {
@@ -62,6 +64,7 @@ public class Account {
 
 	/**
 	 * Method to withdrwal amount
+	 * 
 	 * @param amount
 	 * @param date
 	 * @throws BalanceInsufficientException
@@ -79,4 +82,11 @@ public class Account {
 		}
 	}
 
+	/**
+	 * Print all Transaction for specific account
+	 * @param account
+	 */
+	public void printStatement(String account) {
+		printer.print(transactions, account);
+	}
 }
