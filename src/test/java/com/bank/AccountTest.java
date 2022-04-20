@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import com.bank.domain.Account;
 import com.bank.domain.Printer;
 import com.bank.domain.Transaction;
+import com.bank.exception.BalanceInsufficientException;
 import com.bank.utilities.DateFormat;
 
 public class AccountTest {
@@ -34,8 +35,8 @@ public class AccountTest {
 	 */
 	@Test
 	public void deposit_success() {
-		LocalDate date_deposit = LocalDate.of(2022, 4, 22);
-		account.deposit(new BigDecimal(50), date_deposit);
+		LocalDate depositDate = LocalDate.of(2022, 4, 22);
+		account.deposit(new BigDecimal(50), depositDate);
 		List<Transaction> transactions = account.getTransactions();
 		assertEquals(transactions.size(), 1);
 		assertEquals(transactions.get(0).getCurrentBalance(), BigDecimal.valueOf(550));
@@ -47,8 +48,30 @@ public class AccountTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void deposit_account_negative_amount() {
 		account.setBalance(new BigDecimal(500));
-		LocalDate date_withdrawal = LocalDate.of(2022, 4, 22);
-		account.deposit(new BigDecimal(50).negate(), date_withdrawal);
+		LocalDate depositDate = LocalDate.of(2022, 4, 22);
+		account.deposit(new BigDecimal(50).negate(), depositDate);
 
+	}
+	/**
+	 * withdrwal success test
+	 * @throws BalanceInsufficientException
+	 */
+	@Test
+	public void withdrawal() throws BalanceInsufficientException {
+		LocalDate withdrawalDate = LocalDate.of(2020, 6, 24);
+		account.withdrawal(new BigDecimal(50), withdrawalDate);
+		List<Transaction> transactions = account.getTransactions();
+		assertEquals(transactions.size(), 1);
+		assertEquals(transactions.get(0).getCurrentBalance(),BigDecimal.valueOf(450));
+	}
+	/**
+	 * withdrwal faillure test
+	 * @throws BalanceInsufficientException
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void withdraw_account_negative_amount() throws BalanceInsufficientException {
+		account.setBalance(new BigDecimal(500));
+		LocalDate withdrawalDate = LocalDate.of(2020, 6, 24);
+		account.withdrawal(new BigDecimal(600).negate(), withdrawalDate);
 	}
 }
